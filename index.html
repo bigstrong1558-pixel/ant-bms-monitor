@@ -148,36 +148,36 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,system-ui,
     <div class="soc-ring">
       <div class="soc-ring-visual" id="socVisual">
         <div class="soc-ring-inner">
-          <div class="pct" id="socVal">66%</div>
+          <div class="pct" id="socVal">--</div>
           <div class="label">三元锂</div>
         </div>
       </div>
     </div>
     <div class="metrics">
       <div class="m-row">
-        <div class="m-item"><span class="lbl">电压</span><span class="val v" id="mVolt">76.36V</span></div>
-        <div class="m-item"><span class="lbl">电流</span><span class="val a" id="mCurr">0.20A</span></div>
+        <div class="m-item"><span class="lbl">电压</span><span class="val v" id="mVolt">--</span></div>
+        <div class="m-item"><span class="lbl">电流</span><span class="val a" id="mCurr">--</span></div>
       </div>
       <div class="m-row">
-        <div class="m-item" style="flex:2"><span class="lbl">容量</span><span class="val" id="mCap">95/145Ah</span></div>
-        <div class="m-item"><span class="lbl">循环</span><span class="val" id="mCycle">7</span></div>
-        <div class="m-item"><span class="lbl">功率</span><span class="val" id="mPwr">15W</span></div>
+        <div class="m-item" style="flex:2"><span class="lbl">容量</span><span class="val" id="mCap">--</span></div>
+        <div class="m-item"><span class="lbl">循环</span><span class="val" id="mCycle">--</span></div>
+        <div class="m-item"><span class="lbl">功率</span><span class="val" id="mPwr">--</span></div>
       </div>
     </div>
   </div>
 
   <div class="info-list">
-    <div class="info-row"><span class="lbl">充电剩余 / 放电剩余</span><span class="val" id="chgRemain">0分钟 / 659分钟</span></div>
+    <div class="info-row"><span class="lbl">充电剩余 / 放电剩余</span><span class="val" id="chgRemain">--</span></div>
   </div>
 </div>
 
 <!-- 电压汇总 -->
 <div class="card">
   <div class="vsum-grid">
-    <div class="vsum-item"><div class="icon-wrap" style="color:var(--green)">⚡</div><div class="lbl">平均电压</div><div class="val g" id="vAvg">3.818V</div></div>
-    <div class="vsum-item"><div class="icon-wrap" style="color:var(--orange);font-size:20px;font-weight:700">▼</div><div class="lbl">最低电压</div><div class="val o" id="vMin">3.815V</div></div>
-    <div class="vsum-item"><div class="icon-wrap" style="color:var(--red);font-size:20px;font-weight:700">▲</div><div class="lbl">最高电压</div><div class="val r" id="vMax">3.821V</div></div>
-    <div class="vsum-item"><div class="icon-wrap" style="color:var(--purple);font-size:20px;font-weight:700">∆</div><div class="lbl">压差</div><div class="val p" id="vDiff">0.006V</div></div>
+    <div class="vsum-item"><div class="icon-wrap" style="color:var(--green)">⚡</div><div class="lbl">平均电压</div><div class="val g" id="vAvg">--</div></div>
+    <div class="vsum-item"><div class="icon-wrap" style="color:var(--orange);font-size:20px;font-weight:700">▼</div><div class="lbl">最低电压</div><div class="val o" id="vMin">--</div></div>
+    <div class="vsum-item"><div class="icon-wrap" style="color:var(--red);font-size:20px;font-weight:700">▲</div><div class="lbl">最高电压</div><div class="val r" id="vMax">--</div></div>
+    <div class="vsum-item"><div class="icon-wrap" style="color:var(--purple);font-size:20px;font-weight:700">∆</div><div class="lbl">压差</div><div class="val p" id="vDiff">--</div></div>
   </div>
 </div>
 
@@ -185,7 +185,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,system-ui,
 <div class="card" style="padding:14px 16px">
   <div class="mos-row" style="margin-bottom:10px">
     <div class="mos-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#30d158" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
-    <span class="mos-text" id="mosStatus">充电MOS开启 · 放电MOS开启</span>
+    <span class="mos-text" id="mosStatus">充电MOS - · 放电MOS -</span>
   </div>
   <div class="mos-status-grid">
     <div class="ms-item"><span class="ms-dot" id="sOVP">✓</span><span class="ms-lbl">过压</span></div>
@@ -205,12 +205,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,system-ui,
 <div class="card" style="padding:12px 16px">
   <div class="card-title">🌡 温度</div>
   <div class="temp-row">
-    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">均衡</div><div class="val" id="tBal">15°C</div></div>
-    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">MOS</div><div class="val" id="tMos">15°C</div></div>
-    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">T1</div><div class="val" id="t1">13°C</div></div>
-    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">T2</div><div class="val" id="t2">13°C</div></div>
-    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">T3</div><div class="val" id="t3">14°C</div></div>
-    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">T4</div><div class="val" id="t4">13°C</div></div>
+    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">均衡</div><div class="val" id="tBal">--</div></div>
+    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">MOS</div><div class="val" id="tMos">--</div></div>
+    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">T1</div><div class="val" id="t1">--</div></div>
+    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">T2</div><div class="val" id="t2">--</div></div>
+    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">T3</div><div class="val" id="t3">--</div></div>
+    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">T4</div><div class="val" id="t4">--</div></div>
   </div>
 </div>
 
@@ -272,7 +272,7 @@ async function fetchData() {
     }
 
     document.getElementById('debug').style.display = 'none';
-      document.getElementById('lastUpdateTime').textContent = new Date().toLocaleString();
+      
       refreshTimer = 30;
       var od = document.getElementById('onlineDot'); od.style.background = 'var(--green)'; od.style.boxShadow = '0 0 6px rgba(48,209,88,.5)';
 
@@ -287,32 +287,32 @@ async function fetchData() {
     const v = (k, def) => { const x = props[k]; if (x && typeof x === 'object' && x.value !== undefined) return x.value; return x || def; };
 
     // 更新UI
-    const totalV  = v('Total_V','76.36V');
-    const curr    = v('Current','0.20A');
-    const soc     = parseFloat(v('SOC','66'));
-    const remain  = parseFloat(v('Remain_Ah','95.42'));
-    const rated   = parseFloat(v('Rated_Ah','145.0'));
-    const power   = parseFloat(v('Power','15'));
-    const avgV    = v('Avg_Cell_V','3.818V');
-    const maxV    = v('Max_Cell_V','3.821V');
-    const minV    = v('Min_Cell_V','3.815V');
+    const totalV  = v('Total_V','');
+    const curr    = v('Current','');
+    const soc     = parseFloat(v('SOC',''));
+    const remain  = parseFloat(v('Remain_Ah',''));
+    const rated   = parseFloat(v('Rated_Ah',''));
+    const power   = parseFloat(v('Power',''));
+    const avgV    = v('Avg_Cell_V','');
+    const maxV    = v('Max_Cell_V','');
+    const minV    = v('Min_Cell_V','');
     const maxNo   = v('Max_Cell_No','3');
     const minNo   = v('Min_Cell_No','18');
-    const diffV   = v('Cell_Diff','0.006V');
-    const chg     = v('Chg_MOS','开启');
-    const dis     = v('Dis_MOS','开启');
-    const balS    = v('Balance','关闭');
-    const mosT    = parseInt(v('MOS_Temp','15')) || 15;
-    const balT    = parseInt(v('Bal_Temp','15')) || 15;
-    const t1v     = parseInt(v('Cell_T1','13')) || 13;
-    const t2v     = parseInt(v('Cell_T2','13')) || 13;
-    const t3v     = parseInt(v('Cell_T3','14')) || 14;
-    const t4v     = parseInt(v('Cell_T4','13')) || 13;
+    const diffV   = v('Cell_Diff','');
+    const chg     = v('Chg_MOS','');
+    const dis     = v('Dis_MOS','');
+    const balS    = v('Balance','');
+    const mosT    = parseInt(v('MOS_Temp','')) || 15;
+    const balT    = parseInt(v('Bal_Temp','')) || 15;
+    const t1v     = parseInt(v('Cell_T1','')) || 13;
+    const t2v     = parseInt(v('Cell_T2','')) || 13;
+    const t3v     = parseInt(v('Cell_T3','')) || 14;
+    const t4v     = parseInt(v('Cell_T4','')) || 13;
 
     g('mVolt').textContent = totalV;
     g('mCurr').textContent = curr;
     g('mCap').textContent = `${Math.round(remain)}/${Math.round(rated)}Ah`;
-    g('mCycle').textContent = v('Cycles','7');
+    g('mCycle').textContent = v('Cycles','');
     g('mPwr').textContent = power + 'W';
     g('socVal').textContent = Math.round(soc) + '%';
 
@@ -362,6 +362,10 @@ async function fetchData() {
     } else {
       renderCells([],0,0);
     }
+
+    // 更新时间戳
+    var tsV = v('Time_Stamp','');
+    if (tsV) document.getElementById('lastUpdateTime').textContent = tsV;
 
   } catch(e) {
     document.getElementById('debug').style.display = 'block'
