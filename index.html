@@ -278,8 +278,8 @@ async function fetchData() {
 
     // 时间戳
     g('lastUpdateTime').textContent = v('Time_Stamp','') || new Date().toLocaleString();
-    g('chgTime').textContent = v('Charge_Time','--') + '分钟';
-    g('dchgTime').textContent = v('Decharge_Time','--') + '分钟';
+    g('chgTime').textContent = v('Charge_Time','--') + ' 分钟';
+    g('dchgTime').textContent = v('Decharge_Time','--') + ' 分钟';
 
     var od = document.getElementById('onlineDot');
     if (od) { od.style.background = 'var(--green)'; od.style.boxShadow = '0 0 6px rgba(48,209,88,.5)'; }
