@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>ANT BMS</title>
+<style>
+:root{
+  --bg:#080c18;--card-bg:rgba(18,26,46,.85);--card-border:rgba(255,255,255,.06);
+  --blue:#0a84ff;--blue-glow:rgba(10,132,255,.35);--green:#30d158;--orange:#ff9f0a;
+  --red:#ff453a;--purple:#bf5af2;--text:#f5f5f7;--sec:rgba(255,255,255,.45);
+  --radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,system-ui,sans-serif;
+  padding:0 0 24px;min-height:100vh;font-size:14px;background-image:radial-gradient(ellipse at 50% 0,rgba(10,132,255,.08),transparent 70%)}
+
+/* 顶栏 — 深色简洁 */
+.header{padding:20px 20px 14px;text-align:center;position:relative}
+.header::after{content:'';position:absolute;bottom:0;left:20px;right:20px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent)}
+.header .title{font-size:18px;font-weight:700;letter-spacing:1px;background:linear-gradient(135deg,#f5f5f7,rgba(255,255,255,.6));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+/* dot moved to online indicator */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* 卡片 — 深色磨砂 */
+.card{background:var(--card-bg);border-radius:var(--radius);padding:20px;margin:12px 16px;
+  border:1px solid var(--card-border);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);
+  box-shadow:0 4px 24px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.04)}
+.card-title{font-size:11px;color:var(--sec);font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px}
+
+/* SOC 大卡 — 深蓝渐变 */
+.soc-card{background:linear-gradient(160deg,rgba(10,132,255,.12),rgba(18,26,46,.9) 60%);padding:16px 20px 12px;position:relative;overflow:hidden}
+.soc-card::before{content:'';position:absolute;top:-50%;right:-50%;width:100%;height:100%;
+  background:radial-gradient(circle,rgba(10,132,255,.06),transparent 60%);pointer-events:none}
+.soc-row{display:flex;gap:14px;align-items:center;position:relative;z-index:1}
+.soc-ring{flex:0 0 80px;text-align:center;position:relative}
+.soc-ring-visual{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.soc-ring-inner{width:64px;height:64px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1;box-shadow:inset 0 2px 8px rgba(0,0,0,.3)}
+.soc-ring .pct{font-size:16px;font-weight:800;background:linear-gradient(135deg,#fff,rgba(255,255,255,.7));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.soc-ring .label{font-size:10px;color:var(--sec);letter-spacing:.5px;margin-top:2px}
+.metrics{flex:1;display:flex;flex-direction:column;gap:3px}
+.m-row{display:flex;align-items:stretch;gap:4px;padding:2px 0}
+.m-row .m-item{flex:1;background:rgba(255,255,255,.03);border-radius:10px;padding:6px 4px;text-align:center;border:1px solid rgba(255,255,255,.04)}
+.m-row .m-item .lbl{color:var(--sec);font-size:8px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;display:block}
+.m-row .m-item .val{font-weight:700;font-size:14px;display:block;margin-top:2px;letter-spacing:-.2px}
+.m-row .m-item .val.v{color:var(--blue);text-shadow:0 0 16px var(--blue-glow)}
+.m-row .m-item .val.a{color:var(--green);text-shadow:0 0 12px rgba(48,209,88,.2)}
+.m-row .m-item .val.r{color:var(--red)}
+.m-row .m-item .val.o{color:var(--orange)}
+
+/* 状态信息 */
+.info-list{margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.05)}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0}
+.info-row .lbl{color:var(--sec);font-size:12px;letter-spacing:.2px}
+.info-row .val{font-weight:700;font-size:15px;color:var(--text)}
+
+/* 电压汇总 — 深色底卡片格 */
+.vsum-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+.vsum-item{background:rgba(255,255,255,.03);border-radius:14px;padding:14px 6px;text-align:center;
+  border:1px solid rgba(255,255,255,.04);transition:.2s}
+.vsum-item .badge{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700}
+.vsum-item .icon-wrap{height:26px;display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:4px;font-size:16px}
+.vsum-item .lbl{font-size:9px;color:var(--sec);font-weight:500;letter-spacing:.3px}
+.vsum-item .val{font-size:13px;font-weight:700;margin-top:3px}
+.vsum-item .val.g{color:var(--green);text-shadow:0 0 10px rgba(48,209,88,.2)}
+.vsum-item .val.o{color:var(--orange)}
+.vsum-item .val.r{color:var(--red)}
+.vsum-item .val.p{color:var(--purple)}
+
+/* MOS 卡 */
+.mos-card{background:linear-gradient(135deg,rgba(48,209,88,.06),rgba(18,26,46,.9) 70%);border-color:rgba(48,209,88,.1);padding:14px 20px}
+.mos-row{display:flex;align-items:center;gap:12px}
+.mos-icon{width:34px;height:34px;border-radius:50%;background:rgba(48,209,88,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mos-icon svg{display:block}
+.mos-text{font-weight:700;color:var(--green);font-size:14px;letter-spacing:.3px}
+
+/* 温度 */
+.temp-row{display:flex;gap:8px}
+.temp-item{flex:1;background:rgba(255,255,255,.03);border-radius:12px;padding:12px 4px;text-align:center;border:1px solid rgba(255,255,255,.04)}
+.temp-item .lbl{font-size:9px;color:var(--sec);font-weight:500;letter-spacing:.3px}
+.temp-item .val{font-size:14px;font-weight:700;margin-top:3px;color:var(--text)}
+.temp-icon{width:26px;height:26px;margin:0 auto 6px;opacity:.7}
+
+/* BMS 状态网格 */
+.mos-status-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:4px}
+.ms-item{display:flex;align-items:center;gap:4px;padding:3px 6px;border-radius:6px;background:rgba(255,255,255,.03);font-size:11px}
+.ms-dot{font-size:10px;font-weight:700}
+.ms-dot.ok{color:var(--green)}.ms-dot.err{color:var(--red)}
+.ms-lbl{color:var(--sec);font-size:10px}
+
+/* 电芯网格 */
+.cell-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.cell-item{text-align:center;padding:8px 2px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04)}
+.cell-item .v{font-weight:600;font-size:11px;margin-top:2px;color:rgba(255,255,255,.7)}
+.cell-item .v.high{color:var(--red);font-weight:700;text-shadow:0 0 8px rgba(255,69,58,.3)}
+.cell-item .v.low{color:var(--orange);font-weight:700}
+.cell-item.high-light{background:rgba(255,69,58,.08);border-color:rgba(255,69,58,.25)}
+.cell-item.low-light{background:rgba(255,159,10,.06);border-color:rgba(255,159,10,.2)}
+
+/* 配置面板 */
+.config-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);z-index:200;padding:40px 20px;align-items:center;justify-content:center}
+.config-overlay.show{display:flex}
+.config-box{background:var(--card-bg);border-radius:20px;padding:28px;width:100%;max-width:340px;border:1px solid var(--card-border);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px)}
+.config-box h3{font-size:17px;font-weight:700;color:var(--text);margin-bottom:16px}
+.config-box input{width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;font-size:14px;margin-bottom:10px;outline:0;color:var(--text);transition:.2s}
+.config-box input::placeholder{color:rgba(255,255,255,.25)}
+.config-box input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-glow)}
+.config-box .btn{background:linear-gradient(135deg,var(--blue),#0056d6);color:#fff;border:0;border-radius:10px;padding:12px;width:100%;font-size:15px;font-weight:700;cursor:pointer;transition:.15s}
+.config-box .btn:active{transform:scale(.97);opacity:.8}
+.config-box .hint{font-size:11px;color:var(--sec);margin-top:10px;line-height:1.6}
+
+#debug{font-size:10px;color:var(--sec);margin:0 16px;max-height:100px;overflow:auto;display:none}
+</style>
+</head>
+<body>
+
+<!-- 设置面板 -->
+<div class="config-overlay" id="configPanel">
+  <div class="config-box">
+    <h3>⚙ OneNET 配置</h3>
+    <input id="cfgKey" placeholder="Access Key">
+    <input id="cfgRes" placeholder='资源路径 e.g. products/产品ID'>
+    <input id="cfgPid" value="md8iJvgtGQ" placeholder="Product ID">
+    <input id="cfgDn" value="ZEEHO" placeholder="Device Name">
+    <button class="btn" onclick="saveConfig()">保存</button>
+    <div class="hint">
+      Access Key → OneNET控制台 → 访问权限<br>
+      资源路径 → products/md8iJvgtGQ<br>
+      Token 由服务器自动生成
+    </div>
+  </div>
+</div>
+
+<!-- 顶栏 -->
+<div class="header" style="display:flex;align-items:center;justify-content:space-between;position:relative">
+  <div id="onlineDot" style="width:8px;height:8px;border-radius:50%;background:var(--sec);flex-shrink:0"></div>
+  <div class="title" style="position:absolute;left:50%;transform:translateX(-50%)"><span id="devName">蚂蚁BMS监控看板</span></div>
+  <div style="font-size:10px;color:var(--sec);text-align:right;margin-left:auto" id="refreshCountdown">30s</div>
+</div>
+
+<div style="text-align:center;padding:4px 20px 0;font-size:11px;color:var(--sec);letter-spacing:.3px">
+  最后更新: <span id="lastUpdateTime">--</span>
+</div>
+
+<!-- SOC + 指标（醒目大卡） -->
+<div class="card soc-card" style="margin-top:8px">
+  <div class="soc-row">
+    <div class="soc-ring">
+      <div class="soc-ring-visual" id="socVisual">
+        <div class="soc-ring-inner">
+          <div class="pct" id="socVal">--</div>
+          <div class="label">三元锂</div>
+        </div>
+      </div>
+    </div>
+    <div class="metrics">
+      <div class="m-row">
+        <div class="m-item"><span class="lbl">电压</span><span class="val v" id="mVolt">--</span></div>
+        <div class="m-item"><span class="lbl">电流</span><span class="val a" id="mCurr">--</span></div>
+      </div>
+      <div class="m-row">
+        <div class="m-item" style="flex:2"><span class="lbl">容量</span><span class="val" id="mCap">--</span></div>
+        <div class="m-item"><span class="lbl">循环</span><span class="val" id="mCycle">--</span></div>
+        <div class="m-item"><span class="lbl">功率</span><span class="val" id="mPwr">--</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-list">
+    <div class="info-row"><span class="lbl">充电剩余</span><span class="val" id="chgTime">--</span></div>
+    <div class="info-row"><span class="lbl">放电剩余</span><span class="val" id="dchgTime">--</span></div>
+    <div class="info-row"><span class="lbl">循环次数</span><span class="val" id="bmsCycles">--</span></div>
+  </div>
+</div>
+
+<!-- 电压汇总 -->
+<div class="card">
+  <div class="vsum-grid">
+    <div class="vsum-item"><div class="icon-wrap" style="color:var(--green)">⚡</div><div class="lbl">平均电压</div><div class="val g" id="vAvg">--</div></div>
+    <div class="vsum-item"><div class="icon-wrap" style="color:var(--orange);font-size:20px;font-weight:700">▼</div><div class="lbl">最低电压</div><div class="val o" id="vMin">--</div></div>
+    <div class="vsum-item"><div class="icon-wrap" style="color:var(--red);font-size:20px;font-weight:700">▲</div><div class="lbl">最高电压</div><div class="val r" id="vMax">--</div></div>
+    <div class="vsum-item"><div class="icon-wrap" style="color:var(--purple);font-size:20px;font-weight:700">∆</div><div class="lbl">压差</div><div class="val p" id="vDiff">--</div></div>
+  </div>
+</div>
+
+<!-- MOS + BMS 状态 -->
+<div class="card" style="padding:14px 16px">
+  <div class="mos-row" style="margin-bottom:10px">
+    <div class="mos-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#30d158" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+    <span class="mos-text" id="mosStatus">充电MOS - · 放电MOS -</span>
+  </div>
+  <div class="mos-status-grid">
+    <div class="ms-item"><span class="ms-dot" id="sOVP">✓</span><span class="ms-lbl">过压</span></div>
+    <div class="ms-item"><span class="ms-dot" id="sUVP">✓</span><span class="ms-lbl">欠压</span></div>
+    <div class="ms-item"><span class="ms-dot" id="sOTC">✓</span><span class="ms-lbl">充温</span></div>
+    <div class="ms-item"><span class="ms-dot" id="sOTD">✓</span><span class="ms-lbl">放温</span></div>
+    <div class="ms-item"><span class="ms-dot" id="sOCC">✓</span><span class="ms-lbl">充流</span></div>
+    <div class="ms-item"><span class="ms-dot" id="sOCD">✓</span><span class="ms-lbl">放流</span></div>
+    <div class="ms-item"><span class="ms-dot" id="sSC">✓</span><span class="ms-lbl">短路</span></div>
+    <div class="ms-item"><span class="ms-dot" id="sMOT">✓</span><span class="ms-lbl">MOS温</span></div>
+    <div class="ms-item"><span class="ms-dot" id="sNTC">✓</span><span class="ms-lbl">温感</span></div>
+    <div class="ms-item"><span class="ms-dot" id="sBAL">✓</span><span class="ms-lbl">均衡</span></div>
+  </div>
+</div>
+
+<!-- 温度 --><!-- 温度 -->
+<div class="card" style="padding:12px 16px">
+  <div class="card-title">🌡 温度</div>
+  <div class="temp-row">
+    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">均衡</div><div class="val" id="tBal">--</div></div>
+    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">MOS</div><div class="val" id="tMos">--</div></div>
+    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">T1</div><div class="val" id="t1">--</div></div>
+    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">T2</div><div class="val" id="t2">--</div></div>
+    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">T3</div><div class="val" id="t3">--</div></div>
+    <div class="temp-item"><div class="temp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><path d="M12 2C9 2 8 5 8 8c0 4-2 6-2 8a6 6 0 0012 0c0-2-2-4-2-8 0-3-1-6-4-6z"/><path d="M12 18a2 2 0 100-4 2 2 0 000 4z"/></svg></div><div class="lbl">T4</div><div class="val" id="t4">--</div></div>
+  </div>
+</div>
+
+
+
+<div id="debug"></div>
+
+
+<script>
+let CONFIG = {};
+
+function loadConfig() {
+  CONFIG.key = localStorage.getItem('bms_akey') || '';
+  CONFIG.res = localStorage.getItem('bms_res') || '';
+  CONFIG.pid = localStorage.getItem('bms_pid') || 'md8iJvgtGQ';
+  CONFIG.dn  = localStorage.getItem('bms_dn') || 'ZEEHO';
+  document.getElementById('cfgKey').value = CONFIG.key;
+  document.getElementById('cfgRes').value = CONFIG.res;
+  document.getElementById('cfgPid').value = CONFIG.pid;
+  document.getElementById('cfgDn').value  = CONFIG.dn;
+  if (CONFIG.key) { document.getElementById('configPanel').classList.remove('show'); fetchData(); }
+  else { document.getElementById('configPanel').classList.add('show'); }
+}
+
+function saveConfig() {
+  CONFIG.key = document.getElementById('cfgKey').value.trim();
+  CONFIG.res = document.getElementById('cfgRes').value.trim();
+  CONFIG.pid = document.getElementById('cfgPid').value.trim() || 'md8iJvgtGQ';
+  CONFIG.dn  = document.getElementById('cfgDn').value.trim() || 'ZEEHO';
+  if (!CONFIG.key || !CONFIG.res) { alert('请填写 Access Key 和资源路径'); return; }
+  localStorage.setItem('bms_akey', CONFIG.key);
+  localStorage.setItem('bms_res', CONFIG.res);
+  localStorage.setItem('bms_pid', CONFIG.pid);
+  localStorage.setItem('bms_dn', CONFIG.dn);
+  document.getElementById('configPanel').classList.remove('show');
+  fetchData();
+}
+
+function showConfig() {
+  document.getElementById('configPanel').classList.add('show');
+}
+
+async function fetchData() {
+  if (!CONFIG.key) { document.getElementById('configPanel').classList.add('show'); return; }
+  try {
+    const params = `key=${encodeURIComponent(CONFIG.key)}&res=${encodeURIComponent(CONFIG.res)}&pid=${CONFIG.pid}&dn=${CONFIG.dn}`;
+    const resp = await fetch(`/api/query?${params}`);
+    const result = await resp.json();
+
+    if (result.code !== 0) {
+      document.getElementById('debug').style.display = 'block'
+    ;
+      document.getElementById('debug').textContent = 'API Error: ' + JSON.stringify(result);
+      return;
+    }
+
+    document.getElementById('debug').style.display = 'none';
+      
+      refreshTimer = 30;
+      var od = document.getElementById('onlineDot'); od.style.background = 'var(--green)'; od.style.boxShadow = '0 0 6px rgba(48,209,88,.5)';
+
+    // 解析数据
+    let props = {};
+    if (result.data) {
+      if (Array.isArray(result.data)) result.data.forEach(d => { if (d.identifier) props[d.identifier] = d.value || d; });
+      else props = result.data;
+    }
+
+    const g = id => document.getElementById(id);
+    const v = (k, def) => { const x = props[k]; if (x && typeof x === 'object' && x.value !== undefined) return x.value; return x || def; };
+
+    // 更新UI
+    const totalV  = v('Total_V','');
+    const curr    = v('Current','');
+    const soc     = parseFloat(v('SOC',''));
+    const remain  = parseFloat(v('Remain_Ah',''));
+    const rated   = parseFloat(v('Rated_Ah',''));
+    const power   = parseFloat(v('Power',''));
+    const avgV    = v('Avg_Cell_V','');
+    const maxV    = v('Max_Cell_V','');
+    const minV    = v('Min_Cell_V','');
+    const maxNo   = v('Max_Cell_No','3');
+    const minNo   = v('Min_Cell_No','18');
+    const diffV   = v('Cell_Diff','');
+    const chg     = v('Chg_MOS','');
+    const dis     = v('Dis_MOS','');
+    const balS    = v('Balance','');
+    const mosT    = parseInt(v('MOS_Temp','')) || 15;
+    const balT    = parseInt(v('Bal_Temp','')) || 15;
+    const t1v     = parseInt(v('Cell_T1','')) || 13;
+    const t2v     = parseInt(v('Cell_T2','')) || 13;
+    const t3v     = parseInt(v('Cell_T3','')) || 14;
+    const t4v     = parseInt(v('Cell_T4','')) || 13;
+
+    g('mVolt').textContent = totalV;
+    g('mCurr').textContent = curr;
+    g('mCap').textContent = `${Math.round(remain)}/${Math.round(rated)}Ah`;
+    g('mCycle').textContent = v('Cycles','');
+    g('mPwr').textContent = power + 'W';
+    g('socVal').textContent = Math.round(soc) + '%';
+
+    // SOC 环形渐变
+    const pct = Math.min(Math.max(soc,0),100);
+    document.getElementById('socVisual').style.background = `conic-gradient(var(--blue) 0% ${pct}%, rgba(255,255,255,.06) ${pct}% 100%)`;
+
+    g('vAvg').textContent = avgV;
+    g('vMin').textContent = minV;
+    g('vMax').textContent = maxV;
+    g('vDiff').textContent = diffV;
+
+    // MOS
+    const chgT = chg.includes('开') || chg.includes('开启') ? '开启' : '关闭';
+    const disT = dis.includes('开') || dis.includes('开启') ? '开启' : '关闭';
+    g('mosStatus').textContent = `充电MOS${chgT} 放电MOS${disT}`;
+    // MOS 状态在下方卡片中显示，此处不再重复
+
+    // 温度
+    g('tBal').textContent = balT + '°C';
+    g('tMos').textContent = mosT + '°C';
+    g('t1').textContent = t1v + '°C';
+    g('t2').textContent = t2v + '°C';
+    g('t3').textContent = t3v + '°C';
+    g('t4').textContent = t4v + '°C';
+
+    // BMS 保护状态
+    const statusStr = v('BMS_Status','');
+    if (statusStr) {
+      const parts = String(statusStr).split(',');
+      parts.forEach(p => {
+        const [k, val] = p.split(':');
+        const id = 's' + k;
+        const el = document.getElementById(id);
+        if (el) {
+          el.className = 'ms-dot' + (val === '1' ? ' err' : ' ok');
+          el.textContent = val === '1' ? '⚠' : '✓';
+        }
+      });
+    }
+
+    // 电芯
+    const cellsStr = v('Cells_V','');
+    if (cellsStr) {
+      const cells = String(cellsStr).split(',').map(parseFloat);
+      renderCells(cells, parseInt(maxNo), parseInt(minNo));
+    } else {
+      renderCells([],0,0);
+    }
+
+    // 更新时间戳
+    var tsV = v('Time_Stamp','');
+    if (tsV) document.getElementById('lastUpdateTime').textContent = tsV;
+
+  } catch(e) {
+    document.getElementById('debug').style.display = 'block'
+    ;
+    document.getElementById('debug').textContent = 'Fetch Error: ' + e.message;
+  }
+}
+
+function renderCells(cells, maxNo, minNo) {
+  const grid = document.getElementById('cellGrid');
+  grid.innerHTML = '';
+  const count = Math.max(cells.length, 20);
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement('div');
+    const num = i + 1;
+    let hl = '';
+    if (num === maxNo) hl = 'high-light';
+    else if (num === minNo) hl = 'low-light';
+    d.className = 'cell-item' + (hl ? ' ' + hl : '');
+    const val = cells[i] || 0;
+    let cls = '';
+    if (num === maxNo) cls = 'high';
+    else if (num === minNo) cls = 'low';
+    const batSvg = `<svg width="18" height="14" viewBox="0 0 18 14" fill="none" style="display:block;margin:0 auto 2px"><rect x="1" y="2" width="13" height="10" rx="2" stroke="${cls === 'high' ? '#ff3b30' : cls === 'low' ? '#ff9500' : '#8e8e93'}" stroke-width="1.2" fill="none"/><rect x="14" y="5" width="2" height="4" rx="0.6" fill="${cls === 'high' ? '#ff3b30' : cls === 'low' ? '#ff9500' : '#8e8e93'}"/><text x="7.5" y="9.5" text-anchor="middle" font-size="7" font-weight="600" fill="${cls === 'high' ? '#ff3b30' : cls === 'low' ? '#ff9500' : '#8e8e93'}">${num}</text></svg>`;
+    d.innerHTML = `${batSvg}<div class="v ${cls}">${val > 0 ? val.toFixed(3) + 'V' : '---'}</div>`;
+    grid.appendChild(d);
+  }
+}
+
+loadConfig();
+let refreshTimer = 30;
+let refreshInterval = setInterval(() => {
+  refreshTimer--;
+  document.getElementById('refreshCountdown').textContent = refreshTimer + 's';
+  if (refreshTimer <= 0) {
+    refreshTimer = 30;
+    fetchData();
+  }
+}, 1000);
+</script>
+</body>
+</html>
